@@ -8,7 +8,7 @@ from utils import logger
 
 class ENUM():
     ALLOWED = 'ALLOWED'
-    NOT_ALLOWED = 'NOT ALLOWED'
+    NOT_ALLOWED = 'NOT_ALLOWED'
     NOT_VALID = 'NOT_VALID'
 
 
