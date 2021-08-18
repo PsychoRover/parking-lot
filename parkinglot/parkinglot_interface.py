@@ -1,6 +1,6 @@
+from parkinglot.db import main
 import db
-from is_allowed import is_allowed
-from ocr_api import ocr
+from ocr_validator import OcrValidator
 
 
 class ParkingLot():
@@ -11,8 +11,8 @@ class ParkingLot():
 
     @staticmethod
     def check(img: str) -> str:
-        license = ocr(img)
-        return is_allowed(license)
+        license = OcrValidator.ocr(img)
+        return OcrValidator.license_validator(license)
 
     @staticmethod
     def db_insert(license: str, status: str):
@@ -20,7 +20,7 @@ class ParkingLot():
 
 
 def main():
-    pass
+    print(OcrValidator.license_validator('123F'))
 
 
 if __name__ == '__main__':
