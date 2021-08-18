@@ -1,9 +1,6 @@
 import unittest
 
-from is_allowed import is_allowed
-from utils import logger
-
-logger.info(">>> START UNITTEST <<<")
+from parkinglot.is_allowed import is_allowed
 
 
 class IsAllowedTest(unittest.TestCase):
