@@ -17,11 +17,3 @@ class ParkingLot():
     @staticmethod
     def db_insert(license: str, status: str):
         db.db_insert(license, status)
-
-
-def main():
-    print(OcrValidator.license_validator('123F'))
-
-
-if __name__ == '__main__':
-    main()

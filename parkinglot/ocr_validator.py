@@ -6,6 +6,12 @@ from db import db_insert
 from utils import logger
 
 
+class ENUM():
+    ALLOWED = 'ALLOWED'
+    NOT_ALLOWED = 'NOT ALLOWED'
+    NOT_VALID = 'NOT_VALID'
+
+
 class OcrValidator():
     @staticmethod
     def ocr(file: str) -> str:
@@ -18,8 +24,10 @@ class OcrValidator():
         try:
             filename = file
 
+            # A fixed list of strings without any whitespaces charecters
             result = api.ocr_file(open(filename, 'rb')).splitlines()
 
+            # Return the first the first element or an empty string if list is empty
             return result[0] if result != [] else ''
 
         except Exception as e:
@@ -33,37 +41,36 @@ class OcrValidator():
 
         logger.info(f'Function is_allowed is running with {license = }')
 
-        enum = ['ALLOWED', 'NOT_ALLOWED', 'NOT_VALID']
-        state = enum[0]
+        state = ENUM.ALLOWED
 
         try:
             # Check if there is any (non-digit || non-letter) in license charecters
             if re.sub(r'[a-zA-Z0-9]', '', license):
-                state = enum[2]
+                state = ENUM.NOT_VALID
                 return state
 
             # Check if last charecter in license is 6 or G
             if license[-1] in ('6', 'G'):
-                state = enum[1]
+                state = ENUM.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
             # Check rather there is ('L' || 'M') in license charecters
             if 'L' in license or 'M' in license:
-                state = enum[1]
+                state = ENUM.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
             # Check if license charecters are all digits
             if False not in [*map(str.isdigit, license)]:
-                state = enum[1]
+                state = ENUM.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
         except Exception as err:
             logger.warning(
                 f'License is an empty string! \n{str(err)}', exc_info=True)
-            state = enum[2]
+            state = ENUM.NOT_VALID
             return state
 
         finally:

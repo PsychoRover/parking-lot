@@ -24,6 +24,7 @@ def db_create_database(cur: 'pg2.cursor') -> None:
     """:description: Creating 'parkinglot' database if not exist"""
 
     try:
+        # Looking if database 'parkinglot' is not exist
         cur.execute("SELECT datname FROM pg_database;")
         if 'parkinglot' not in sum(cur.fetchall(), ()):
             cur.execute(
@@ -61,6 +62,7 @@ def db_create_table(user: str = 'postgres', password: str = 'password', database
             WHERE schemaname = 'public';
             """)
 
+        # Check if 'entrances' table is not exist in 'parkinglot' DB
         if 'entrances' not in sum(cur.fetchall(), ()):
             cur.execute(
                 """
@@ -93,6 +95,7 @@ def db_insert(liscense: str, status: str) -> None:
     cur = db_establish_connection(database='parkinglot')
 
     try:
+        # Insert relevant data to DB
         cur.execute(
             f"""
             INSERT INTO entrances(license_number, is_allowed, time)
@@ -109,11 +112,3 @@ def db_insert(liscense: str, status: str) -> None:
     finally:
         logger.info("db_insert status: Done!")
         cur.close()
-
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
