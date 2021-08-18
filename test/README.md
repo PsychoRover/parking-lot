@@ -1,6 +1,6 @@
 # Unittest
 
-This folder containing a unittests files and exmples
+This folder containing a unittests file and image examples for negative and positive expected results.
 
 ## Installation
 
