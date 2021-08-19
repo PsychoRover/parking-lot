@@ -130,3 +130,8 @@ dmypy.json
 
 #api_keys
 config.py
+
+# Pypi build
+build
+dist
+parkinglot.egg-info
