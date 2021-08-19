@@ -17,8 +17,8 @@ pip install parkinglot
 ```python
 from parkinglot import ParkingLot
 
-# Create 'parkinglot' DB and 'entrances' table with given Postgres user and password.
-# By default user='postgres', password='password'.
+# By default, it create 'parkinglot' DB and 'entrances' table with given Postgres user and password.
+# By default, user='postgres' and password='password'.
 pl = ParkingLot()
 
 # Check rather a vehicle is allowed or not allowed by given string like path to an image on your machine.
