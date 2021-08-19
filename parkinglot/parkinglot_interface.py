@@ -1,5 +1,5 @@
-from db import PostDB
-from ocr_validator import OcrValidator
+from .db import PostDB
+from .ocr_validator import OcrValidator
 
 
 class ParkingLot():

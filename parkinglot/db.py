@@ -1,6 +1,6 @@
 import psycopg2 as pg2
 
-from utils import logger, now
+from .utils import logger, now
 
 # Global variables
 conn = None
