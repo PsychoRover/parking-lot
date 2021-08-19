@@ -2,113 +2,133 @@ import psycopg2 as pg2
 
 from utils import logger, now
 
+# Establish first connection with default username and password
+try:
+    conn = pg2.connect(user='postgres', password='password')
+    conn.autocommit = True
+    cur = conn.cursor()
 
-def db_establish_connection(user: str = 'postgres', password: str = 'password', database=None) -> 'pg2.cursor':
-    """:description: Establishing connection to PostgresDB"""
+except Exception as e:
+    logger.fatal(e, exc_info=True)
+    raise Exception(
+        "It seems like you have some problem with your database, please proceed reading the log for farther understading")
 
-    try:
-        conn = pg2.connect(user=user, password=password, database=database)
-        conn.autocommit = True
-        cur = conn.cursor()
-    except Exception as e:
-        logger.fatal(e, exc_info=True)
-        raise Exception(
-            "It seems like you have some problem with your database, please proceed reading the log for farther understading")
-    finally:
-        logger.info("db_establish_connection status: Done!")
-
-    return cur
+finally:
+    logger.info("first connection to DB ended successfully status: Done!")
 
 
-def db_create_database(cur: 'pg2.cursor') -> None:
-    """:description: Creating 'parkinglot' database if not exist"""
+class PostDB:
 
-    try:
-        # Looking if database 'parkinglot' is not exist
-        cur.execute("SELECT datname FROM pg_database;")
-        if 'parkinglot' not in sum(cur.fetchall(), ()):
+    @staticmethod
+    def create_database(name: str = 'parkinglot') -> None:
+        """:description: Creating a database if not exist"""
+
+        try:
+            # Looking if database 'parkinglot' is not exist
+            cur.execute('SELECT datname FROM pg_database;')
+            if name.lower() not in sum(cur.fetchall(), ()):
+                cur.execute(
+                    f"""
+                    CREATE DATABASE {name}
+                    WITH
+                        ENCODING = 'UTF8'
+                        CONNECTION LIMIT = 100
+                        ALLOW_CONNECTIONS = true;
+                    """)
+                logger.info(
+                    f'Database {name} was created successfully!')
+            else:
+                logger.info(f'Database {name} already exist')
+
+        except Exception as e:
+            logger.fatal(e, exc_info=True)
+            raise Exception(
+                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+
+        finally:
+            logger.info(f'create_database with value {name = } status: Done!')
+
+    @staticmethod
+    def create_table(table: str = 'entrances') -> None:
+        """:description: Creating a table if not exist"""
+
+        try:
             cur.execute(
                 """
-                CREATE DATABASE parkinglot
-                WITH
-                    ENCODING = 'UTF8'
-                    CONNECTION LIMIT = 100
-                    ALLOW_CONNECTIONS = true;
+                SELECT tablename FROM pg_catalog.pg_tables
+                WHERE schemaname = 'public';
                 """)
-            logger.info("Database 'parkinglot' was created successfully!")
-        else:
-            logger.info("Database 'parkinglot' already exist")
 
-    except Exception as e:
-        logger.fatal(e, exc_info=True)
-        raise Exception(
-            "It seems like you have some problem with your database, please proceed reading the log for farther understading")
+            # Check if 'entrances' table is not exist in 'parkinglot' DB
+            if table not in sum(cur.fetchall(), ()):
+                cur.execute(
+                    f"""
+                    CREATE TABLE {table}(
+                        id SERIAL PRIMARY KEY,
+                        license_number VARCHAR(255) NOT NULL,
+                        is_allowed VARCHAR(255) NOT NULL,
+                        time TIMESTAMP NOT NULL
+                    );
+                    """
+                )
+                logger.info(f"Table {table} was created successfully!")
+            else:
+                logger.info(f"Table {table} already exist")
 
-    finally:
-        logger.info('db_create_database status: Done!')
-        cur.close()
+        except Exception as e:
+            logger.fatal(e, exc_info=True)
+            raise Exception(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading")
 
+        finally:
+            logger.info(f'create_table with value {table = } status: Done!')
 
-def db_create_table(user: str = 'postgres', password: str = 'password', database=None) -> None:
-    """:description: Creating 'entrances' table if not exist"""
+    @staticmethod
+    def insert_data(liscense: str, status: str) -> None:
+        """:description: Inserting values to DB"""
 
-    # Establish connection with relevant database
-    cur = db_establish_connection(user, password, database)
-
-    try:
-        cur.execute(
-            """
-            SELECT tablename FROM pg_catalog.pg_tables
-            WHERE schemaname = 'public';
-            """)
-
-        # Check if 'entrances' table is not exist in 'parkinglot' DB
-        if 'entrances' not in sum(cur.fetchall(), ()):
+        try:
+            # Insert relevant data to DB
             cur.execute(
-                """
-                CREATE TABLE entrances(
-                    id SERIAL PRIMARY KEY,
-                    license_number VARCHAR(255) NOT NULL,
-                    is_allowed VARCHAR(255) NOT NULL,
-                    time TIMESTAMP NOT NULL
-                );
+                f"""
+                INSERT INTO entrances(license_number, is_allowed, time)
+                VALUES
+                ('{liscense}', '{status}', to_timestamp('{now}', 'dd-mm-yyyy hh24:mi:ss'))
                 """
             )
-            logger.info("Table 'entrances' was created successfully!")
-        else:
-            logger.info("Table 'entrances' already exist")
 
-    except Exception as e:
-        logger.fatal(e, exc_info=True)
-        raise Exception(
-            "It seems like you have some problem with your database, please proceed reading the log for farther understading")
+        except Exception as e:
+            logger.fatal(e, exc_info=True)
+            raise Exception(
+                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
 
-    finally:
-        logger.info('db_create_table status: Done!')
-        cur.close()
+        finally:
+            logger.info(
+                f'db_insert with value {license = } is done with {status = }')
+
+    @staticmethod
+    def switch_connection(user: str = 'postgres', password: str = 'password', database: str = None):
+        global conn
+        global cur
+
+        # Establish first connection with default username and password
+        try:
+            conn = pg2.connect(user=user, password=password, database=database)
+            conn.autocommit = True
+            cur = conn.cursor()
+
+        except Exception as e:
+            logger.fatal(e, exc_info=True)
+            raise Exception(
+                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+
+        finally:
+            logger.info(
+                f'switching connection to {user = }, {database = } ended successfully status: Done!')
 
 
-def db_insert(liscense: str, status: str) -> None:
-    """:description: Inserting values to DB"""
-
-    # Establish connection with relevant database
-    cur = db_establish_connection(database='parkinglot')
-
-    try:
-        # Insert relevant data to DB
-        cur.execute(
-            f"""
-            INSERT INTO entrances(license_number, is_allowed, time)
-            VALUES
-            ('{liscense}', '{status}', to_timestamp('{now}', 'dd-mm-yyyy hh24:mi:ss'))
-            """
-        )
-
-    except Exception as e:
-        logger.fatal(e, exc_info=True)
-        raise Exception(
-            "It seems like you have some problem with your database, please proceed reading the log for farther understading")
-
-    finally:
-        logger.info("db_insert status: Done!")
-        cur.close()
+if __name__ == '__main__':
+    db = PostDB()
+    db.create_database('David')
+    db.switch_connection('david')
+    db.create_table('david_table')
