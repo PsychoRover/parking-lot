@@ -2,8 +2,11 @@ import ocrspace
 import regex as re
 
 from config import api_key
-from db import db_insert
+from db import PostDB
 from utils import logger
+
+# Instance of PostDB for insertion of data
+db_insert = PostDB.insert_data
 
 
 class ENUM():

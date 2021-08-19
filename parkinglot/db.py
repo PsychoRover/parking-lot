@@ -14,13 +14,14 @@ except Exception as e:
         "It seems like you have some problem with your database, please proceed reading the log for farther understading")
 
 finally:
-    logger.info("first connection to DB ended successfully status: Done!")
+    logger.info(
+        "first connection to DB ended successfully status: Done!")
 
 
 class PostDB:
 
     @staticmethod
-    def create_database(name: str = 'parkinglot') -> None:
+    def create_database(name: str) -> None:
         """:description: Creating a database if not exist"""
 
         try:
@@ -49,7 +50,7 @@ class PostDB:
             logger.info(f'create_database with value {name = } status: Done!')
 
     @staticmethod
-    def create_table(table: str = 'entrances') -> None:
+    def create_table(table: str) -> None:
         """:description: Creating a table if not exist"""
 
         try:
@@ -78,7 +79,7 @@ class PostDB:
         except Exception as e:
             logger.fatal(e, exc_info=True)
             raise Exception(
-                "It seems like you have some problem with your database, please proceed reading the log for farther understading")
+                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
 
         finally:
             logger.info(f'create_table with value {table = } status: Done!')
@@ -107,9 +108,9 @@ class PostDB:
                 f'db_insert with value {license = } is done with {status = }')
 
     @staticmethod
-    def switch_connection(user: str = 'postgres', password: str = 'password', database: str = None):
-        global conn
-        global cur
+    def switch_connection(user: str, password: str, database: str = None) -> None:
+        global __conn
+        global __cur
 
         # Establish first connection with default username and password
         try:
@@ -124,11 +125,4 @@ class PostDB:
 
         finally:
             logger.info(
-                f'switching connection to {user = }, {database = } ended successfully status: Done!')
-
-
-if __name__ == '__main__':
-    db = PostDB()
-    db.create_database('David')
-    db.switch_connection('david')
-    db.create_table('david_table')
+                f'Switching connection to {user = }, {database = } ended')
