@@ -121,7 +121,7 @@ class PostDB:
 
         # Establish first connection with default username and password
         try:
-            conn = pg2.connect(user=user, password=password, database=database)
+            conn = pg2.connect(user=user, password=password, database=database.lower())
             conn.autocommit = True
             cur = conn.cursor()
 
@@ -132,4 +132,4 @@ class PostDB:
 
         finally:
             logger.info(
-                f'Switching connection to {user = }, {database = } ended')
+                f'Switching connection to {user = }, {database.lower() = } ended')
