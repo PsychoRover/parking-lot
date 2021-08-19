@@ -9,7 +9,7 @@ LONG_DESCRIPTION = 'The service indicates rather a vehicle allowed or not allowe
 setup(
     name="parkinglot",
     version=VERSION,
-    author="PsychoRover (Gil Chen)",
+    author="PsychoRover",
     author_email="<Gtorrent12@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
