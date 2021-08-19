@@ -1,1 +1,1 @@
-from parkinglot_interface import ParkingLot
+from .parkinglot_interface import ParkingLot
