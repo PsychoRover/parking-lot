@@ -109,8 +109,8 @@ class PostDB:
 
     @staticmethod
     def switch_connection(user: str, password: str, database: str = None) -> None:
-        global __conn
-        global __cur
+        global conn
+        global cur
 
         # Establish first connection with default username and password
         try:
