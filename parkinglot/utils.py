@@ -1,6 +1,6 @@
 import logging
-from datetime import datetime
 import os
+from datetime import datetime
 
 # 'AppData' path for saving a log.txt
 env = os.getenv('APPDATA') + '\\parkinglot_log.txt'
