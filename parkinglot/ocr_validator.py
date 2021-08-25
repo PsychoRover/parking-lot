@@ -65,7 +65,7 @@ class OcrValidator():
                 return state
 
             # Check if license charecters are all digits
-            if False not in [*map(str.isdigit, license)]:
+            if False not in map(str.isdigit, license):
                 state = ENUM.NOT_ALLOWED
                 db_insert(license, state)
                 return state
