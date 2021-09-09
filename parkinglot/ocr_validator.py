@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 import ocrspace
 import regex as re
 
@@ -9,10 +11,10 @@ from .utils import logger
 db_insert = PostDB.insert_data
 
 
-class ENUM():
-    ALLOWED = 'ALLOWED'
-    NOT_ALLOWED = 'NOT_ALLOWED'
-    NOT_VALID = 'NOT_VALID'
+class IsAllowedState(Enum):
+    ALLOWED = auto()
+    NOT_ALLOWED = auto()
+    NOT_VALID = auto()
 
 
 class OcrValidator():
@@ -44,36 +46,36 @@ class OcrValidator():
 
         logger.info(f'Function is_allowed is running with {license = }')
 
-        state = ENUM.ALLOWED
+        state = IsAllowedState.ALLOWED
 
         try:
             # Check if there is any (non-digit || non-letter) in license charecters
             if re.sub(r'[a-zA-Z0-9]', '', license):
-                state = ENUM.NOT_VALID
+                state = IsAllowedState.NOT_VALID
                 return state
 
             # Check if last charecter in license is 6 or G
             if license[-1] in ('6', 'G'):
-                state = ENUM.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
             # Check rather there is ('L' || 'M') in license charecters
             if 'L' in license or 'M' in license:
-                state = ENUM.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
             # Check if license charecters are all digits
             if False not in map(str.isdigit, license):
-                state = ENUM.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED
                 db_insert(license, state)
                 return state
 
         except Exception as err:
             logger.warning(
                 f'License is an empty string! \n{str(err)}', exc_info=True)
-            state = ENUM.NOT_VALID
+            state = IsAllowedState.NOT_VALID
             return state
 
         finally:
