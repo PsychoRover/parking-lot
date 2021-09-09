@@ -46,36 +46,36 @@ class OcrValidator():
 
         logger.info(f'Function is_allowed is running with {license = }')
 
-        state = IsAllowedState.ALLOWED
+        state = IsAllowedState.ALLOWED.name
 
         try:
             # Check if there is any (non-digit || non-letter) in license charecters
             if re.sub(r'[a-zA-Z0-9]', '', license):
-                state = IsAllowedState.NOT_VALID
+                state = IsAllowedState.NOT_VALID.name
                 return state
 
             # Check if last charecter in license is 6 or G
             if license[-1] in ('6', 'G'):
-                state = IsAllowedState.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED.name
                 db_insert(license, state)
                 return state
 
             # Check rather there is ('L' || 'M') in license charecters
             if 'L' in license or 'M' in license:
-                state = IsAllowedState.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED.name
                 db_insert(license, state)
                 return state
 
             # Check if license charecters are all digits
             if False not in map(str.isdigit, license):
-                state = IsAllowedState.NOT_ALLOWED
+                state = IsAllowedState.NOT_ALLOWED.name
                 db_insert(license, state)
                 return state
 
         except Exception as err:
             logger.warning(
                 f'License is an empty string! \n{str(err)}', exc_info=True)
-            state = IsAllowedState.NOT_VALID
+            state = IsAllowedState.NOT_VALID.name
             return state
 
         finally:
