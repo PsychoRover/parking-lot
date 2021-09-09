@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-VERSION = '0.0.18'
+VERSION = '0.0.19'
 DESCRIPTION = 'ParkingLot is a Python service imitating a parking lot like system.'
 LONG_DESCRIPTION = 'The service indicates rather a vehicle allowed or not allowed to enter the parking lot.'
 
@@ -10,7 +10,6 @@ setup(
     name="parkinglot",
     version=VERSION,
     author="PsychoRover",
-    author_email="<Gtorrent12@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
