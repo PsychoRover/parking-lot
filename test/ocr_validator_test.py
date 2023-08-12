@@ -18,8 +18,8 @@ class IsAllowedTest(unittest.TestCase):
 
     def test_not_valid_inputs(self):
         # All ascii Non-Alphanumeric Printable Characters
-        for i in '!\"#$%&\'()*+-./:;<=>?@[\\]^_{|}~':
-            self.assertEqual(is_allowed(f'{i}'), 'NOT_VALID')
+        for ch in '!\"#$%&\'()*+-./:;<=>?@[\\]^_{|}~':
+            self.assertEqual(is_allowed(ch), 'NOT_VALID')
         self.assertEqual(is_allowed('asf78*'), 'NOT_VALID')
         self.assertEqual(is_allowed('asf%78'), 'NOT_VALID')
         self.assertEqual(is_allowed(''), 'NOT_VALID')
