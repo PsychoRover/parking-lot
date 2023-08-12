@@ -6,7 +6,7 @@ The service indicates rather a vehicle allowed or not allowed to enter the parki
 
 ## Installation
 
-Please make sure you're having a Postgres DB on your machine.
+Please make sure you have a Postgres DB on your machine.
 
 ```bash
 pip install parkinglot
@@ -17,7 +17,7 @@ pip install parkinglot
 ```python
 from parkinglot import ParkingLot
 
-# By default it create 'parkinglot' DB and 'entrances' table with given Postgres user and password.
+# By default it creates a 'parkinglot' DB and 'entrances' table with given Postgres user and password.
 # By default user='postgres' and password='password'.
 pl = ParkingLot()
 
