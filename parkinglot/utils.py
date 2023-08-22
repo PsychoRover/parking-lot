@@ -3,14 +3,15 @@ import os
 from datetime import datetime
 
 # 'AppData' path for saving a log.txt
-env = os.getenv('APPDATA') + '\\parkinglot_log.txt'
+env = os.getenv("APPDATA") + "\\parkinglot_log.txt"
 
 # Logger instance
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(
-    handlers=[logging.FileHandler(env, 'w', 'utf-8')],
+    handlers=[logging.FileHandler(env, "w", "utf-8")],
     format=LOG_FORMAT,
-    level=logging.DEBUG)
+    level=logging.DEBUG,
+)
 logger = logging.getLogger()
 
 # Datetime instance of now

@@ -3,5 +3,16 @@
   "features": {
     "ghcr.io/devcontainers-contrib/features/poetry:2": {},
     "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {}
-  }
+},
+"customizations": {
+	"vscode": {
+		"extensions": [
+			"ms-python.python",
+			"ms-python.pylint",
+			"ms-python.black-formatter",
+			"PKief.material-icon-theme",
+			"ms-python.isort"
+		]
+	}
+}
 }

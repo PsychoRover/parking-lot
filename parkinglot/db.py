@@ -7,6 +7,10 @@ conn = None
 cur = None
 
 
+class DbError(Exception):
+    """Database Error"""
+
+
 class PostDB:
     def __init__(self, user: str, password: str) -> None:
         global conn
@@ -20,12 +24,12 @@ class PostDB:
 
         except Exception as e:
             logger.fatal(e, exc_info=True)
-            raise Exception(
-                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+            raise DbError(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading"
+            ) from e
 
         finally:
-            logger.info(
-                'First connection to DB ended successfully status: Done!')
+            logger.info("First connection to DB ended successfully status: Done!")
 
     @staticmethod
     def create_database(database: str) -> None:
@@ -33,7 +37,7 @@ class PostDB:
 
         try:
             # Looking if database 'parkinglot' is not exist
-            cur.execute('SELECT datname FROM pg_database;')
+            cur.execute("SELECT datname FROM pg_database;")
             if database.lower() not in sum(cur.fetchall(), ()):
                 cur.execute(
                     f"""
@@ -42,19 +46,20 @@ class PostDB:
                         ENCODING = 'UTF8'
                         CONNECTION LIMIT = 100
                         ALLOW_CONNECTIONS = true;
-                    """)
-                logger.info(
-                    f'Database {database} was created successfully!')
+                    """
+                )
+                logger.info(f"Database {database} was created successfully!")
             else:
-                logger.info(f'Database {database} already exist')
+                logger.info("Database %s already exist", database)
 
         except Exception as e:
             logger.fatal(e, exc_info=True)
-            raise Exception(
-                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+            raise DbError(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading"
+            ) from e
 
         finally:
-            logger.info(f'create_database with value {database = } status: Done!')
+            logger.info("create_database with value %s status: Done!", database)
 
     @staticmethod
     def create_table(table: str) -> None:
@@ -65,7 +70,8 @@ class PostDB:
                 """
                 SELECT tablename FROM pg_catalog.pg_tables
                 WHERE schemaname = 'public';
-                """)
+                """
+            )
 
             # Check if 'entrances' table is not exist in 'parkinglot' DB
             if table not in sum(cur.fetchall(), ()):
@@ -79,17 +85,18 @@ class PostDB:
                     );
                     """
                 )
-                logger.info(f"Table {table} was created successfully!")
+                logger.info("Table %s was created successfully!", table)
             else:
-                logger.info(f"Table {table} already exist")
+                logger.info("Table %s already exist", table)
 
         except Exception as e:
             logger.fatal(e, exc_info=True)
-            raise Exception(
-                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+            raise DbError(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading"
+            ) from e
 
         finally:
-            logger.info(f'create_table with value {table = } status: Done!')
+            logger.info("create_table with value %s status: Done!", table)
 
     @staticmethod
     def insert_data(liscense: str, status: str) -> None:
@@ -107,12 +114,12 @@ class PostDB:
 
         except Exception as e:
             logger.fatal(e, exc_info=True)
-            raise Exception(
-                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+            raise DbError(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading"
+            ) from e
 
         finally:
-            logger.info(
-                f'db_insert with value {license = } is done with {status = }')
+            logger.info("db_insert with value %s is done with %s", liscense, status)
 
     @staticmethod
     def switch_connection(user: str, password: str, database: str = None) -> None:
@@ -127,9 +134,9 @@ class PostDB:
 
         except Exception as e:
             logger.fatal(e, exc_info=True)
-            raise Exception(
-                'It seems like you have some problem with your database, please proceed reading the log for farther understading')
+            raise DbError(
+                "It seems like you have some problem with your database, please proceed reading the log for farther understading"
+            ) from e
 
         finally:
-            logger.info(
-                f'Switching connection to {user = }, {database.lower() = } ended')
+            logger.info("Switching connection to %s, %s ended", user, database.lower())

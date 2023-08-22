@@ -2,8 +2,19 @@ from .db import PostDB
 from .ocr_validator import OcrValidator
 
 
-class ParkingLot():
-    def __init__(self, user: str = 'postgres', password: str = 'password', database: str = 'parkinglot', table: str = 'entrances') -> None:
+class ParkingLot:
+    user: str
+    password: str
+    database: str
+    table: str
+
+    def __init__(
+        self,
+        user="postgres",
+        password="password",
+        database="parkinglot",
+        table="entrances",
+    ) -> None:
         db = PostDB(user=user, password=password)
         db.create_database(database=database)
         db.switch_connection(user=user, password=password, database=database)
@@ -11,5 +22,5 @@ class ParkingLot():
 
     @staticmethod
     def check(img: str) -> str:
-        license = OcrValidator.ocr(img)
-        return OcrValidator.license_validator(license)
+        license_ = OcrValidator.ocr(img)
+        return OcrValidator.license_validator(license_)
